@@ -54,12 +54,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="archiveIconImageView" destination="pFJ-Hp-gdS" id="c1S-P7-jKN"/>
                         <outlet property="feedImageView" destination="LEl-Wx-g3S" id="Kqh-x1-zp8"/>
                         <outlet property="feedView" destination="LEl-Wx-g3S" id="vWt-hC-N8M"/>
-                        <outlet property="laterIconImageView" destination="ImG-Bl-VoB" id="I6o-ra-kgs"/>
+                        <outlet property="leftIconImageView" destination="pFJ-Hp-gdS" id="DLh-Hu-5Bb"/>
                         <outlet property="messageContainerView" destination="YB5-p9-7HV" id="8vB-eb-k7b"/>
                         <outlet property="messageImageView" destination="pmN-mt-qM4" id="Q17-Y6-IzF"/>
+                        <outlet property="rightIconImageView" destination="ImG-Bl-VoB" id="oZm-Uv-GMa"/>
                         <outlet property="scrollView" destination="ml8-7N-Gkz" id="Xfk-bP-VWD"/>
                     </connections>
                 </viewController>
