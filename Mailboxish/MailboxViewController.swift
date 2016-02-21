@@ -29,6 +29,11 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     let rightIconInitialXPosition = CGFloat(277)
     let leftIconInitialXPosition = CGFloat(17)
     
+    // Menu edge gesture config
+    let maxMenuOpenDistance = CGFloat(270)
+    let minMenuOpenDistance = CGFloat(0)
+    let menuBreakpoint = CGFloat(150)
+    
     // Message background colors
     let greenColor = UIColor(red: 116/255, green: 215/255, blue: 104/255, alpha: 1)
     let redColor = UIColor(red: 233/255, green: 85/255, blue: 59/255, alpha: 1)
@@ -56,6 +61,41 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
         let messagePanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "messageDidPan:")
         messagePanGestureRecognizer.delegate = self
         messageImageView.addGestureRecognizer(messagePanGestureRecognizer)
+        
+        // Edge pan to reveal menu
+        let edgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "onEdgePan:")
+        edgeGesture.edges = UIRectEdge.Left
+        scrollView.addGestureRecognizer(edgeGesture)
+    }
+    
+    func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
+        // Relative change in (x,y) coordinates from where gesture began.
+        let translation = sender.translationInView(view)
+        
+        setScrollViewPosition(translation)
+        
+        if sender.state == UIGestureRecognizerState.Ended {
+            snapScrollViewPosition(translation)
+        }
+    }
+    
+    func snapScrollViewPosition(translation: CGPoint) {
+        UIView.animateWithDuration(0.2) { () -> Void in
+            if translation.x < self.menuBreakpoint {
+               self.scrollView.frame.origin.x = 0
+            } else {
+               self.scrollView.frame.origin.x = self.maxMenuOpenDistance
+            }
+        }
+    }
+    
+    func setScrollViewPosition(translation: CGPoint) {
+        
+        if translation.x < maxMenuOpenDistance {
+            scrollView.frame.origin.x = translation.x
+        } else {
+            scrollView.frame.origin.x = maxMenuOpenDistance
+        }
     }
     
     func messageDidPan(sender: UIPanGestureRecognizer) {
