@@ -21,6 +21,8 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     @IBOutlet weak var rescheduleView: UIImageView!
     @IBOutlet weak var archiveFeedView: UIImageView!
     @IBOutlet weak var navSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var composeImageView: UIImageView!
+    @IBOutlet weak var sideMenuImageView: UIImageView!
     
     // Message pan gesture config
     let leftIconOffsetFromMessageView = CGFloat(-42)
@@ -56,10 +58,8 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set the initial active segment to mailbox view
         navSegmentedControl.selectedSegmentIndex = 1
-        
-        // hidden view setup
-        rescheduleView.alpha = 0
 
         // scroll view setup
         scrollView.contentSize = feedView.image!.size
@@ -259,5 +259,23 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
                 self.messageContainerView.frame.origin.x = 0
             }
         }
+    }
+    
+    @IBAction func composeButtonDidTap(sender: AnyObject) {
+        UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut, animations: { () -> Void in
+            self.composeImageView.alpha = 1
+            self.composeImageView.frame.origin.y -= 480
+            self.scrollView.alpha = 0.5
+            self.sideMenuImageView.alpha = 0
+        }, completion: nil)
+    }
+    
+    @IBAction func composeCancelDidTap(sender: AnyObject) {
+        UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseOut, animations: { () -> Void in
+            self.composeImageView.alpha = 0
+            self.composeImageView.frame.origin.y += 480
+            self.scrollView.alpha = 1
+            self.sideMenuImageView.alpha = 1
+        }, completion: nil)
     }
 }

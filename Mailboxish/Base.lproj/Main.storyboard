@@ -77,7 +77,7 @@
                                             <action selector="didChangeNavSegmentedControl:" destination="BYZ-38-t0r" eventType="valueChanged" id="e2x-pN-hh5"/>
                                         </connections>
                                     </segmentedControl>
-                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="reschedule" id="b0O-te-e0A">
+                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="center" image="reschedule" id="b0O-te-e0A">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <gestureRecognizers/>
@@ -85,13 +85,29 @@
                                             <outletCollection property="gestureRecognizers" destination="EOs-0Q-8em" appends="YES" id="D1F-wQ-a9v"/>
                                         </connections>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jiY-jl-6sd">
+                                        <rect key="frame" x="250" y="27" width="69" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="composeButtonDidTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="V3B-Xt-URw"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="center" image="compose" id="I3R-sp-UcG">
+                                <rect key="frame" x="0.0" y="500" width="320" height="264"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="gxh-4O-oW2" appends="YES" id="G0T-Lt-jbC"/>
+                                </connections>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.25507023358585856" green="0.25507023358585856" blue="0.25507023358585856" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
                         <outlet property="archiveFeedView" destination="pE6-EC-5NL" id="aVe-MC-i0B"/>
+                        <outlet property="composeImageView" destination="I3R-sp-UcG" id="uAG-da-mDI"/>
                         <outlet property="feedImageView" destination="LEl-Wx-g3S" id="Kqh-x1-zp8"/>
                         <outlet property="feedView" destination="LEl-Wx-g3S" id="vWt-hC-N8M"/>
                         <outlet property="laterFeedView" destination="D38-Zv-ejn" id="ja5-Ek-RPn"/>
@@ -102,12 +118,18 @@
                         <outlet property="rescheduleView" destination="b0O-te-e0A" id="xy9-dd-SOP"/>
                         <outlet property="rightIconImageView" destination="ImG-Bl-VoB" id="oZm-Uv-GMa"/>
                         <outlet property="scrollView" destination="ml8-7N-Gkz" id="Xfk-bP-VWD"/>
+                        <outlet property="sideMenuImageView" destination="29n-6K-zgo" id="iiZ-2f-9Sr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="EOs-0Q-8em">
                     <connections>
                         <action selector="onRescheduleDidTap:" destination="BYZ-38-t0r" id="Kq6-B0-8dp"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="gxh-4O-oW2">
+                    <connections>
+                        <action selector="composeCancelDidTap:" destination="BYZ-38-t0r" id="LZj-8F-vub"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -117,6 +139,7 @@
     <resources>
         <image name="archive_icon" width="25" height="25"/>
         <image name="archive_nav_icon" width="25" height="20"/>
+        <image name="compose" width="320" height="264"/>
         <image name="feed" width="320" height="1202"/>
         <image name="help_label" width="320" height="37"/>
         <image name="later_icon" width="25" height="25"/>
