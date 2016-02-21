@@ -41,7 +41,10 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     let tanColor = UIColor(red: 215/255, green: 165/255, blue: 120/255, alpha: 1)
     let grayColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1)
     
+    // Gesture recognizer config
     var messagePanGestureRecognizer: UIPanGestureRecognizer!
+    var menuPanGestureRecognizer: UIPanGestureRecognizer!
+    var menuEdgeGestureRecognizer: UIScreenEdgePanGestureRecognizer!
     
     enum messageStatus {
         case reschedule
@@ -58,14 +61,18 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
         scrollView.contentSize = feedView.image!.size
         
         // Gesture for individual message
-        let messagePanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "messageDidPan:")
+        messagePanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "messageDidPan:")
         messagePanGestureRecognizer.delegate = self
         messageImageView.addGestureRecognizer(messagePanGestureRecognizer)
         
         // Edge pan to reveal menu
-        let edgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "onEdgePan:")
-        edgeGesture.edges = UIRectEdge.Left
-        scrollView.addGestureRecognizer(edgeGesture)
+        menuEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: "onEdgePan:")
+        menuEdgeGestureRecognizer.edges = UIRectEdge.Left
+        scrollView.addGestureRecognizer(menuEdgeGestureRecognizer)
+        
+        // Pan gesture for open menu
+        menuPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "menuDidPanOpen:")
+        menuPanGestureRecognizer.delegate = self
     }
     
     func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
@@ -83,10 +90,24 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
         UIView.animateWithDuration(0.2) { () -> Void in
             if translation.x < self.menuBreakpoint {
                self.scrollView.frame.origin.x = 0
+               self.scrollView.removeGestureRecognizer(self.menuPanGestureRecognizer)
             } else {
                self.scrollView.frame.origin.x = self.maxMenuOpenDistance
+               self.scrollView.addGestureRecognizer(self.menuPanGestureRecognizer)
             }
         }
+    }
+    
+    func menuDidPanOpen(sender: UIPanGestureRecognizer) {
+        feedPanGesture(sender.translationInView(view))
+        
+        if sender.state == .Ended {
+            snapScrollViewPosition(sender.translationInView(view))
+        }
+    }
+    
+    func feedPanGesture(translation: CGPoint) {
+        scrollView.frame.origin.x = translation.x + maxMenuOpenDistance
     }
     
     func setScrollViewPosition(translation: CGPoint) {
@@ -98,13 +119,14 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
         }
     }
     
+    
     func messageDidPan(sender: UIPanGestureRecognizer) {
         keepImageAndIconsNSyncWithPanGesture(sender.translationInView(view))
         
         if (sender.state == .Began || sender.state == .Changed) {
             updateMessageActionState()
         } else if sender.state == .Ended {
-            snapToEndState()
+            snapMessageViewToEndState()
             self.scrollView.scrollEnabled = true
         }
     }
@@ -140,7 +162,7 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
         }
     }
     
-    func snapToEndState() {
+    func snapMessageViewToEndState() {
         switch checkPosition(messageImageView) {
         case .normal:
             UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: { () -> Void in
