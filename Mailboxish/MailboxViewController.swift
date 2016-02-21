@@ -10,6 +10,7 @@ import UIKit
 
 class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
 
+    @IBOutlet weak var laterFeedView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var feedView: UIImageView!
     @IBOutlet weak var messageImageView: UIImageView!
@@ -17,11 +18,9 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     @IBOutlet weak var rightIconImageView: UIImageView!
     @IBOutlet weak var leftIconImageView: UIImageView!
     @IBOutlet weak var feedImageView: UIImageView!
-    
-    // Scroll view feed config
-    let initialFeedPosition: CGFloat = 165
-    let initialFeedImageHeight: CGFloat = 86
-    let initialContentSize: CGSize = CGSizeMake(320, 1367.5)
+    @IBOutlet weak var rescheduleView: UIImageView!
+    @IBOutlet weak var archiveFeedView: UIImageView!
+    @IBOutlet weak var navSegmentedControl: UISegmentedControl!
     
     // Message pan gesture config
     let leftIconOffsetFromMessageView = CGFloat(-42)
@@ -56,6 +55,11 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navSegmentedControl.selectedSegmentIndex = 1
+        
+        // hidden view setup
+        rescheduleView.alpha = 0
 
         // scroll view setup
         scrollView.contentSize = feedView.image!.size
@@ -166,15 +170,16 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
         switch checkPosition(messageImageView) {
         case .normal:
             UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: { () -> Void in
-                self.messageImageView.frame.origin.x = 0
-                self.leftIconImageView.center.x = 30
-                self.rightIconImageView.center.x = 290
+                self.resetMessageView()
             }, completion: nil)
         case .reschedule:
             UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: { () -> Void in
                 self.messageImageView.frame.origin.x = -380
                 self.rightIconImageView.center.x = -350
-            }, completion: nil)
+                }, completion: { (Bool) -> Void in
+                    self.rescheduleView.alpha = 1
+                })
+            
         case .list:
             UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: { () -> Void in
                 self.messageImageView.frame.origin.x = -380
@@ -188,6 +193,12 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
                 self.closeAndResetMessage()
             })
         }
+    }
+    
+    func resetMessageView() {
+        self.messageImageView.frame.origin.x = 0
+        self.leftIconImageView.center.x = 30
+        self.rightIconImageView.center.x = 290
     }
     
     func checkPosition(view: UIImageView!) -> messageStatus {
@@ -207,20 +218,46 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
 
     
     func closeAndResetMessage() {
+        let initialFeedPosition = feedImageView.frame.origin.y
+        let messageHeight = messageContainerView.frame.height
+        let messageContainerInitialPosition = messageContainerView.frame.origin.y
+        
         UIView.animateWithDuration(0.3, animations: { () -> Void in
-            self.feedImageView.frame.origin.y = self.initialFeedPosition - self.initialFeedImageHeight
-            self.scrollView.contentSize = CGSizeMake(320, self.initialContentSize.height - self.initialFeedImageHeight)
-            }, completion: {
-                finished in
-                self.messageImageView.frame.origin.x = 0
-                self.leftIconImageView.center.x = 30
-                self.rightIconImageView.center.x = 290
-                UIView.animateWithDuration(0.5, delay: 1, options: .CurveEaseOut, animations: { () -> Void in
-                    self.feedImageView.frame.origin.y = self.initialFeedPosition
-                    self.scrollView.contentSize = CGSizeMake(320, self.initialContentSize.height)
-                    }, completion: nil)
-        })
+            self.feedImageView.frame.origin.y = initialFeedPosition - messageHeight
+            self.messageContainerView.frame.origin.y = messageContainerInitialPosition - messageHeight
+        }) { finished in
+            self.resetMessageView()
+            UIView.animateWithDuration(0.5, delay: 1, options: .CurveEaseOut, animations: { () -> Void in
+                    self.feedImageView.frame.origin.y = initialFeedPosition
+                    self.messageContainerView.frame.origin.y = messageContainerInitialPosition
+            }, completion: nil)
+        }
     }
 
+    @IBAction func onRescheduleDidTap(sender: UITapGestureRecognizer) {
+        rescheduleView.alpha = 0
+        closeAndResetMessage()
+    }
     
+    @IBAction func didChangeNavSegmentedControl(sender: UISegmentedControl) {
+        UIView.animateWithDuration(0.3) { () -> Void in
+            switch sender.selectedSegmentIndex {
+            case 0:
+                self.laterFeedView.frame.origin.x = 0
+                self.archiveFeedView.frame.origin.x = 320
+                self.feedImageView.frame.origin.x = 320
+                self.messageContainerView.frame.origin.x = 320
+            case 2:
+                self.laterFeedView.frame.origin.x = -320
+                self.archiveFeedView.frame.origin.x = 0
+                self.feedImageView.frame.origin.x = -320
+                self.messageContainerView.frame.origin.x = -320
+            default:
+                self.laterFeedView.frame.origin.x = -320
+                self.archiveFeedView.frame.origin.x = 320
+                self.feedImageView.frame.origin.x = 0
+                self.messageContainerView.frame.origin.x = 0
+            }
+        }
+    }
 }
