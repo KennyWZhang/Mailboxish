@@ -23,6 +23,7 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     @IBOutlet weak var navSegmentedControl: UISegmentedControl!
     @IBOutlet weak var composeImageView: UIImageView!
     @IBOutlet weak var sideMenuImageView: UIImageView!
+    @IBOutlet weak var listView: UIImageView!
     
     // Message pan gesture config
     let leftIconOffsetFromMessageView = CGFloat(-42)
@@ -184,7 +185,9 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
             UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: { () -> Void in
                 self.messageImageView.frame.origin.x = -380
                 self.rightIconImageView.center.x = -30
-            }, completion: nil)
+                }, completion: { (Bool) -> Void in
+                    self.listView.alpha = 1
+                })
         case .archive, .delete:
             UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: { () -> Void in
                 self.messageImageView.frame.origin.x = 380
@@ -237,6 +240,12 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRe
     @IBAction func onRescheduleDidTap(sender: UITapGestureRecognizer) {
         rescheduleView.alpha = 0
         closeAndResetMessage()
+    }
+    
+    @IBAction func onListDidTap(sender: UITapGestureRecognizer) {
+        listView.alpha = 0
+        closeAndResetMessage()
+        
     }
     
     @IBAction func didChangeNavSegmentedControl(sender: UISegmentedControl) {

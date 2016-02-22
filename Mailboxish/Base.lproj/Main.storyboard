@@ -85,6 +85,14 @@
                                             <outletCollection property="gestureRecognizers" destination="EOs-0Q-8em" appends="YES" id="D1F-wQ-a9v"/>
                                         </connections>
                                     </imageView>
+                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="center" image="list" id="UA9-Et-6b9">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="gAT-da-GI0" appends="YES" id="qGO-pw-6iu"/>
+                                        </connections>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jiY-jl-6sd">
                                         <rect key="frame" x="250" y="27" width="69" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -112,6 +120,7 @@
                         <outlet property="feedView" destination="LEl-Wx-g3S" id="vWt-hC-N8M"/>
                         <outlet property="laterFeedView" destination="D38-Zv-ejn" id="ja5-Ek-RPn"/>
                         <outlet property="leftIconImageView" destination="pFJ-Hp-gdS" id="DLh-Hu-5Bb"/>
+                        <outlet property="listView" destination="UA9-Et-6b9" id="Zd5-IJ-tSR"/>
                         <outlet property="messageContainerView" destination="YB5-p9-7HV" id="8vB-eb-k7b"/>
                         <outlet property="messageImageView" destination="pmN-mt-qM4" id="Q17-Y6-IzF"/>
                         <outlet property="navSegmentedControl" destination="Z8l-Ea-GdY" id="bcj-YQ-6jO"/>
@@ -132,6 +141,11 @@
                         <action selector="composeCancelDidTap:" destination="BYZ-38-t0r" id="LZj-8F-vub"/>
                     </connections>
                 </tapGestureRecognizer>
+                <tapGestureRecognizer id="gAT-da-GI0">
+                    <connections>
+                        <action selector="onListDidTap:" destination="BYZ-38-t0r" id="vcC-zY-m4j"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="162" y="358"/>
         </scene>
@@ -145,6 +159,7 @@
         <image name="later_icon" width="25" height="25"/>
         <image name="later_nav_icon" width="25" height="20"/>
         <image name="later_screen" width="320" height="568"/>
+        <image name="list" width="320" height="568"/>
         <image name="mail_nav_icon" width="25" height="20"/>
         <image name="menu" width="320" height="568"/>
         <image name="message" width="320" height="86"/>
